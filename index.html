@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="Video-of-Thought">
+  <meta name="keywords" content="Nerfies, D-NeRF, NeRF">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Video-of-Thought: Step-by-Step Video Reasoning from Perception to Cognition</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" id=""></script>
+
+    <style>
+        body .container ul {
+            list-style-type: disc;  /* 恢复标准的圆点样式 */
+            margin-left: 30px;      /* 添加一些左边距，确保列表内缩显示 */
+            padding-left: 0;        /* 重置内边距 */
+        }
+
+        li {
+            margin-bottom: 10px;    /* 如果需要，可以添加底部外边距 */
+        }
+    </style>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.icon">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop" style="max-width: 1000px">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+            <h2 class="title is-2 publication-title"><em>Recognizing Everything from All Modalities at Once:</em> Grounded Multimodal Universal Information Extraction</h2>
+          <div class="is-size-5 publication-authors">
+
+            <span class="author-block">
+              <a href="https://zhangmeishan.github.io/">Meishan Zhang</a><sup>1</sup>,
+            </span>
+
+            <span class="author-block">
+              <a href="https://haofei.vip/">Hao Fei</a><sup>2,*</sup>,
+            </span>
+
+            <span class="author-block">
+              <a href="https://jiwei0523.github.io/">Bin Wang</a><sup>1</sup>,
+            </span>
+
+            <span class="author-block">
+              <a href="https://chocowu.github.io/">Shengqiong Wu</a><sup>2</sup>,
+            </span>
+
+            <span class="author-block">
+              <a href="https://personal.ntu.edu.sg/hanwangzhang/">Yixin Cao</a><sup>3</sup>,
+            </span>
+
+            <span class="author-block">
+              <a href="https://www.comp.nus.edu.sg/~leeml/">Fei Li</a><sup>4</sup>,
+            </span>
+
+            <span class="author-block">
+              <a href="https://www.comp.nus.edu.sg/~whsu/">Min Zhang</a><sup>1</sup>
+            </span>
+          </div>
+
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>Harbin Institute of Technology (Shenzhen)</span><br>
+            <span class="author-block"><sup>2</sup>National University of Singapore</span><br>
+            <span class="author-block"><sup>3</sup>Fudan University</span> &nbsp;
+            <span class="author-block"><sup>4</sup>Wuhan University</span>
+          </div>
+          <br>
+          <span class="author-block" style="font-size: 20px;">Accepted by ACL 2024 (Findings)</span><br>
+          <span class="author-block" style="font-size: 20px;">(* Correspondence)</span>
+          <br><br>
+          <div class="column has-text-centered">
+
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2406.03701"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/scofield7419/MUIE-REAMO"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Model&Code</span>
+                  </a>
+              </span>
+
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/scofield7419/MUIE-Bench"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fa fa-database"></i>
+                  </span>
+                  <span>Benchmark Data</span>
+                  </a>
+              </span>
+
+<!--              <span class="link-block">-->
+<!--                <a href="https://arxiv.org/abs/2305.11255"-->
+<!--                   class="external-link button is-normal is-rounded is-dark">-->
+<!--                  <span class="icon">-->
+<!--                      <i class="ai ai-arxiv"></i>-->
+<!--                  </span>-->
+<!--                  <span>arXiv</span>-->
+<!--                </a>-->
+<!--              </span>-->
+              <!-- Video Link. -->
+
+              <span class="link-block">
+                <a href="#leaderboard"
+                   class="external-link button is-normal is-rounded is-dark" style="background-color: orange;">
+                  <span class="icon">
+                      <i class="fa fa-trophy"></i>
+                  </span>
+                  <span>Leaderboard</span>
+                </a>
+
+              <span class="link-block">
+                <a href="https://www.youtube.com/watch?v=2fKCWjetV-Y"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                  </span>
+                  <span>Video</span>
+                </a>
+
+<!--               <span class="link-block">-->
+<!--                <a href="https://huggingface.co/spaces/xxxx/VoT" target="_blank"-->
+<!--                   class="Rexternal-link button is-normal is-rounded is-dark">-->
+<!--                  <span class="icon">-->
+<!--                    <i class="fa fa-laugh"></i>-->
+<!--                  </span>-->
+<!--                  <span>Demo</span>-->
+<!--                </a>-->
+<!--              </span>-->
+
+              </span>
+              <!-- Poster Link. -->
+              <span class="link-block">
+              <a href="./static/media/ACL24_MUIE_poster.pdf" class="external-link button is-normal is-rounded is-dark">
+                <span class="icon">
+                    <svg class="svg-inline--fa fa-chalkboard fa-w-20" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chalkboard" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M96 64h448v352h64V40c0-22.06-17.94-40-40-40H72C49.94 0 32 17.94 32 40v376h64V64zm528 384H480v-64H288v64H16c-8.84 0-16 7.16-16 16v32c0 8.84 7.16 16 16 16h608c8.84 0 16-7.16 16-16v-32c0-8.84-7.16-16-16-16z"></path></svg><!-- <i class="fas fa-chalkboard"></i> Font Awesome fontawesome.com -->
+                </span>
+                <span>Poster</span>
+              </a>
+            </span>
+
+              <!-- Dataset Link. -->
+<!--              <span class="link-block">-->
+<!--                <a href="https://github.com/google/nerfies/releases/tag/0.1"-->
+<!--                   class="external-link button is-normal is-rounded is-dark">-->
+<!--                  <span class="icon">-->
+<!--                      <i class="far fa-images"></i>-->
+<!--                  </span>-->
+<!--                  <span>Data</span>-->
+<!--                  </a>                -->
+<!--              </span>-->
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!--<section class="hero is-light is-small">-->
+<!--  <div class="hero-body">-->
+<!--    <div class="container">-->
+<!--      <div id="results-carousel" class="carousel results-carousel">-->
+<!--        <div class="item item-steve">-->
+<!--          <video poster="" id="steve" autoplay controls muted loop playsinline height="100%">-->
+<!--            <source src="./static/videos/steve.mp4"-->
+<!--                    type="video/mp4">-->
+<!--          </video>-->
+<!--        </div>-->
+<!--        <div class="item item-chair-tp">-->
+<!--          <video poster="" id="chair-tp" autoplay controls muted loop playsinline height="100%">-->
+<!--            <source src="./static/videos/chair-tp.mp4"-->
+<!--                    type="video/mp4">-->
+<!--          </video>-->
+<!--        </div>-->
+<!--        <div class="item item-shiba">-->
+<!--          <video poster="" id="shiba" autoplay controls muted loop playsinline height="100%">-->
+<!--            <source src="./static/videos/shiba.mp4"-->
+<!--                    type="video/mp4">-->
+<!--          </video>-->
+<!--        </div>-->
+<!--        <div class="item item-fullbody">-->
+<!--          <video poster="" id="fullbody" autoplay controls muted loop playsinline height="100%">-->
+<!--            <source src="./static/videos/fullbody.mp4"-->
+<!--                    type="video/mp4">-->
+<!--          </video>-->
+<!--        </div>-->
+<!--        <div class="item item-blueshirt">-->
+<!--          <video poster="" id="blueshirt" autoplay controls muted loop playsinline height="100%">-->
+<!--            <source src="./static/videos/blueshirt.mp4"-->
+<!--                    type="video/mp4">-->
+<!--          </video>-->
+<!--        </div>-->
+<!--        <div class="item item-mask">-->
+<!--          <video poster="" id="mask" autoplay controls muted loop playsinline height="100%">-->
+<!--            <source src="./static/videos/mask.mp4"-->
+<!--                    type="video/mp4">-->
+<!--          </video>-->
+<!--        </div>-->
+<!--        <div class="item item-coffee">-->
+<!--          <video poster="" id="coffee" autoplay controls muted loop playsinline height="100%">-->
+<!--            <source src="./static/videos/coffee.mp4"-->
+<!--                    type="video/mp4">-->
+<!--          </video>-->
+<!--        </div>-->
+<!--        <div class="item item-toby">-->
+<!--          <video poster="" id="toby" autoplay controls muted loop playsinline height="100%">-->
+<!--            <source src="./static/videos/toby2.mp4"-->
+<!--                    type="video/mp4">-->
+<!--          </video>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</section>-->
+
+
+    
+<section class="section">
+    <div class="container is-max-desktop">
+        <!-- Paper video. -->
+        <div class="columns is-centered has-text-centered">
+            <div class="column is-full-width">
+                <h2 class="title is-2">Video Presentation</h2>
+                <div class="publication-video">
+                    <iframe src="https://www.youtube.com/embed/2fKCWjetV-Y?si=CAKPdiSVrwfwkoF-"
+                            frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+        <!--/ Paper video. -->
+    </div>
+</section>
+
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            In the field of information extraction (IE), tasks across a wide range of modalities and their combinations have been traditionally studied in isolation,
+              leaving a gap in deeply recognizing and analyzing cross-modal information.
+              To address this, this work for the first time introduces the concept of grounded Multimodal Universal Information Extraction (MUIE),
+              providing a unified task framework to analyze any IE tasks over various modalities, along with their fine-grained groundings.
+              To tackle MUIE, we tailor a multimodal large language model (MLLM), Reamo, capable of extracting and grounding information from all modalities,
+              i.e., recognizing everything from all modalities at once.
+              Reamo is updated via varied tuning strategies, equipping it with powerful capabilities for information recognition and fine-grained multimodal grounding.
+              To address the absence of a suitable benchmark for grounded MUIE, we curate a high-quality, diverse, and challenging test set,
+              which encompasses IE tasks across 9 common modality combinations with the corresponding multimodal groundings.
+              The extensive comparison of Reamo with existing MLLMs integrated into pipeline approaches demonstrates its advantages across all evaluation dimensions,
+              establishing a strong benchmark for the follow-up research.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+
+  </div>
+</section>
+
+
+<!--<section class="section">-->
+<!--  <div class="container is-max-desktop">-->
+<!--    <div class="columns is-centered has-text-centered">-->
+<!--      <div class="column is-four-fifths">-->
+<!--        <h2 class="title is-3">Presentation</h2>-->
+<!--        <div class="publication-video">-->
+<!--          <video  controls playsinline height="100%">-->
+<!--              <source src="./static/media/paper-intro-468-recd.mp4" type="video/mp4">-->
+<!--            </video>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</section>-->
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Paper intro. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-2">Task Definition</h2>
+        <h2 class="title is-3" style="margin-top: -10px"> Grounded MUIE</h2>
+<!--          <p style="text-align:left" >-->
+<!--            Here is the illustration of detecting the explicit and implicit sentiment polarities towards targets.-->
+<!--            Explicit opinion expression can help direct inference of the sentiment, while detecting implicit sentiment requires common-sense and multi-hop reasoning.-->
+<!--          </p><br>-->
+<!--        <div class="publication-image" style="text-align:left">-->
+<!--          <b style="text-align:left;font-size: 1.5em">▶ Framework Overview</b>-->
+<!--        </div>-->
+        <div class="publication-image" style="text-align:center">
+          <img width="80%" src="./static/images/MUIE-task.png">
+        </div>
+        <br>
+
+
+        <div class="publication-image" style="text-align:left">
+          <b>▶ NER</b>
+          <p style="text-align:justify">predicting all possible textual labels of entities \( \{E^{\text{ner}}\} \), with pre-defined entity types \( C^{\text{ner}}\in \mathcal{C}^{\text{ner}} \) (e.g., person, location and organization), where each \( E \) may correspond to a span within \( T \), or visual region within \( I \), or a speech segment within \( A \).
+We denote the visual grounding mask as \( M_{img} \) and the speech segment as \( M_{aud} \).<p>
+<!--          <center><img  width="70%" src="./static/images/step1.png"></center>-->
+<!--          <p style="text-align:justify">After this step, all the possible <b>Target</b> involved in the question will be confirmed.</p>-->
+        </div>
+        <br>
+
+        <div class="publication-image" style="text-align:left">
+          <b>▶ RE</b>
+          <p style="text-align:justify">first identifying all possible entities \( \{E^{\text{re}}\} \)  following the NER step, and then determine a pre-defined relation label \( R^{\text{RE}}\in \mathcal{R}^{\text{RE}} \)  for two entities \( < E^{\text{RE}}_i, E^{\text{RE}}_j> \)  that should be paired.
+Also \( E^{\text{RE}} \)  should correspond to \( T \) , \( I \) , or \( A \) , as in NER.<p>
+<!--          <p style="text-align:justify">The yielded grounded <b>Target Tracklet</b> of STSG will serve as low-level evidence (i.e., supporting rationale) for the next step of behavior analysis.</p>-->
+        </div>
+        <br>
+
+
+        <div class="publication-image" style="text-align:left">
+          <b>▶ EE</b>
+          <p style="text-align:justify">detecting all possible structured event records that consist of event trigger \( E^{\text{et}} \) , event type \( C^{\text{et}}\in \mathcal{C}^{\text{et}} \) , event argument \( E^{\text{ea}} \)  and event argument role \( C^{\text{er}} \in \mathcal{C}^{\text{er}} \) .
+Here \( E^{\text{et}} \)  and \( E^{\text{ea}} \)  correspond to a continuous span within \( T \)  or a speech segment within \( A \) .
+Also \( E^{\text{ea}} \)  might refer to the visual region within \( I \) ,
+or the temporal dynamic tracklet in video \( V \)  (i.e., object tracking).
+We denote the video tracking mask as \( M_{vid} \) .
+\( \mathcal{C}^{\text{et}} \)  and \( \mathcal{C}^{\text{er}} \)  are pre-defined label sets.<p>
+<!--          <center><img  width="70%" src="./static/images/step3.png"></center>-->
+<!--          <p style="text-align:justify">This step yields the target action's <b>Observation and Implication</b>.</p>-->
+        </div>
+        <br>
+
+
+<!--        <div class="publication-image" style="text-align:left">-->
+<!--          <b>▶ Step-4: Question Answering via Ranking</b>-->
+<!--          <p style="text-align:justify">With in-depth understanding of the target actions in the video, we then carefully examine each optional answer with commonsense knowledge, where the final result is output after ranking those candidates.<p>-->
+<!--          <center><img  width="70%" src="./static/images/step4.png"></center>-->
+<!--          <p style="text-align:justify">We then rank the scores of all options and select the most optimal answer <b>Answer</b>.</p>-->
+<!--        </div>-->
+<!--        <br>-->
+
+
+<!--        <div class="publication-image" style="text-align:left">-->
+<!--          <b>▶ Step-5: Answer Verification</b>-->
+<!--          <p style="text-align:justify">Finally, VoT performs verification for the answer from both pixel grounding perception and commonsense cognition perspectives, ensuring the most factually accurate result.<p>-->
+<!--          <center><img  width="70%" src="./static/images/step5.png"></center>-->
+<!--          <p style="text-align:justify">If any inconsistencies are found in perception and cognition perspectives, we record the corresponding rationale, and re-execute the 4-th step to reselect the answer.-->
+<!--This approach ensures that the final outcome is the most factually accurate.</p>-->
+<!--        </div>-->
+<!--        <br>-->
+
+      </div>
+
+    </div>
+    <!--/ Paper intro. -->
+  </div>
+</section>
+
+
+
+<section class="section" style="margin-top: -10px">
+  <div class="container is-max-desktop">
+    <!-- Paper method. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-2">Model: REAMO</h2>
+        <h2 class="title is-3" style="margin-top: -10px;font-size: 1.8em">Recognizing Everything from All Modalities at Once</h2>
+          <p style="text-align:justify">
+
+          To solve MUIE, we consider taking advantage of the existing generative LLMs with in-context instructions.
+          We develop a novel multimodal LLM, <b>REAMO</b>, achieving <em>Recognizing Everything from All Modalities at Once</em>.
+            REAMO not only outputs all possible textual IE labels but also identifies corresponding groundings across other modalities:
+            1) statically, by segmenting visual objects and audio speeches, and 2) dynamically, by tracking textual or vocal events in videos.
+            Technically, REAMO employs a Vicuna LLM as its core semantic reasoner, utilizing ImageBind as a multimodal encoder to project image, video and audio inputs into LLM-understandable signals.
+            At the decoding end, we integrate the SEEM for visual grounding&tracking, and the SHAS for audio segmentation, where the messages are passing from LLM to decoders through structured meta-response effectively.
+            Given input multimodal information, REAMO is able to output UIE label tokens as well as fine-grained groundings recurrently.
+
+          </p><br>
+        <div class="publication-image">
+          <img width="100%" src="./static/images/Reamo.png">
+        </div>
+        <br>
+
+
+
+        <p style="text-align:left">
+          <b style="font-size: 1.5em">▶ Visualization of REAMO on MUIE</b>
+        </p><br>
+
+        <div class="publication-image" style="text-align: center">
+          <figure  style="text-align: center">
+              <img src="./static/images/NER.png" style="width:70%">
+              <figcaption>
+                  <p style="text-align: justify;">
+                          <b>Case.1 :</b> Visualization of MUIE (NER) with modality-specific case via reasoning.
+                      </font>
+                  </p>
+              </figcaption>
+          </figure>
+<!--          <center><img width="100%" src="./static/images/case.png"></center>-->
+        </div><br><br>
+        <div class="publication-image" style="text-align: center">
+          <figure  style="text-align: center">
+              <img src="./static/images/RE.png" style="width:70%">
+              <figcaption>
+                  <p style="text-align: justify;">
+                          <b>Case.2 :</b> Visualization of MUIE (RE) with grounding rationale via reasoning.
+                      </font>
+                  </p>
+              </figcaption>
+          </figure>
+<!--          <center><img width="100%" src="./static/images/case2.png"></center>-->
+        </div><br><br>
+        <div class="publication-image" style="text-align: center">
+          <figure  style="text-align: center">
+              <img src="./static/images/EE.png" style="width:70%">
+              <figcaption>
+                  <p style="text-align: justify;">
+                          <b>Case.3 :</b> Visualization of MUIE (EE) with commonsense-aware cognitive reasoning.
+                      </font>
+                  </p>
+              </figcaption>
+          </figure>
+<!--          <center><img width="100%" src="./static/images/case3.png"></center>-->
+        </div><br>
+
+<!--        <div class="publication-image" style="text-align:left">-->
+<!--          <b style="font-size: 1.5em">▶ STSG Representation Integration</b>-->
+<!--          <p style="text-align:justify">We propose the integration of a STSG representation, modeling both the input video and its STSG representation,-->
+<!--            where fine-grained spatial-temporal features are carefully integrated and modeled.<p>-->
+<!--          <center><img  width="90%" src="./static/images/STSG.png"></center>-->
+
+<!--        </div>-->
+<!--        <br>-->
+
+
+
+<!--        <div class="publication-image" style="text-align:left">-->
+<!--          <b style="font-size: 1.5em">▶ Fine-grained Video-Scene Grounding-aware Tuning</b>-->
+<!--          <p style="text-align:justify">To enable MotionEpic with fine-grained pixel-level spatial-temporal grounding between videos and STSGs, we also investigate various distinct video-STSG training objects.-->
+<!--STSG annotations are used during the grounding-aware tuning phase, while in the subsequent stage, the system is learned to autonomously parse STSG,-->
+<!--            and thus supports STSG-free inference and reasoning for downstream tasks.<p>-->
+<!--&lt;!&ndash;          <center><img  width="70%" src="./static/images/STSG.png"></center>&ndash;&gt;-->
+
+
+<!--        </div>-->
+<!--        <br>-->
+
+
+<!--        <div class="publication-image" style="text-align:left; margin-left: 40px">-->
+<!--        <ol>-->
+<!--            <li><b>Enhancing coarse-grained correspondence</b>-->
+<!--                <ul>-->
+<!--                    <li><b>L<sub>1</sub></b>: predicting if the overall input video and STSG are paired.</li>-->
+<!--                    <li><b>L<sub>2</sub></b>: given a video, generating the whole STSG (expression) of the video.</li>-->
+<!--                </ul>-->
+<!--            </li>-->
+<!--            <li><b>Enhancing fine-grained correspondence</b>-->
+<!--                <ul>-->
+<!--                    <li><b>L<sub>3</sub></b>: given a video and action description(s), outputting the corresponding object tracklet(s), i.e., a partial STSG.</li>-->
+<!--                    <li><b>L<sub>4</sub></b>: given a video and key object(s), describing the corresponding temporal action(s) in textual response, and outputting the corresponding object tracklet(s).</li>-->
+<!--                    <li><b>L<sub>5</sub></b>: given a video and a bbox of a certain frame's object, outputting the object label, as well as the corresponding tracklet.</li>-->
+<!--                </ul>-->
+<!--            </li>-->
+<!--        </ol>-->
+<!--        </div>-->
+
+
+
+      </div>
+    </div>
+    <!--/ Paper method. -->
+  </div>
+</section>
+
+
+
+
+
+
+
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Paper intro. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-2">Benchmark Data</h2>
+<!--        <h2 class="title is-3" style="margin-top: -10px"> Grounded MUIE</h2>-->
+          <p style="text-align:justify" >
+            To evaluate the performance of our grounded MUIE system, we develop a benchmark testing set.
+            We select 9 existing datasets from different modalities (or combinations thereof) for IE/MIE tasks.
+The following table summarizes these datasets of the raw sources.
+We then process these datasets, such as Text\( \leftrightarrow \)Speech, to create 6 new datasets under new multimodal (combination) scenarios.
+Before annotation, we carefully select 200 instances from their corresponding testing sets, ensuring each instance contained as much IE information as possible.
+
+          </p><br>
+<!--        <div class="publication-image" style="text-align:left">-->
+<!--          <b style="text-align:left;font-size: 1.5em">▶ Framework Overview</b>-->
+<!--        </div>-->
+        <div class="publication-image" style="text-align:center">
+          <img width="100%" src="./static/images/dataset.png">
+        </div>
+        <br>
+
+        <p style="text-align:justify;color: #e80101;font-size: large" >
+            <b>The benchmark data is now being enriched and scaled, stay tuned!</b>
+        </p><br>
+
+
+        <p style="text-align:left">
+          <b style="font-size: 1.5em">▶ Evaluation Methods</b>
+        </p><br>
+
+
+        <p style="text-align:justify" >
+            Grounded MUIE evaluation dataset involves predictions for three tasks, including UIE label prediction and multimodal grounding prediction task prediction.
+        </p><br>
+
+        <div style="text-align:left">
+          <b>▶  UIE:</b>
+           &nbsp To evaluate textual UIE results of the model, we use <b>span-based offset Micro-F1</b> as the primary metric.
+
+            <ul>
+                <li> For <b>NER</b> task, we follow a span-level evaluation setting, where the entity boundary and entity type must be correctly predicted.  </li>
+                <li> For <b>RE</b> task, a relation triple is correct if the model correctly predicts the boundaries of the subject entity, the object entity, and the entity relation.  </li>
+                <li> For <b>EE</b> task, we report two evaluation metrics:
+                    <ul>
+                        <li>  Event Trigger (ET): an event trigger is     correct if the event type and the trigger word are     correctly predicted.  </li>
+                        <li> Event Argument (EA): an event argument is correct if its role type and event type match a reference argument mention.  </li>
+                    </ul>
+                </li>
+            </ul>
+
+        </div>
+        <br>
+
+          
+
+        <div style="text-align:left">
+          <b>▶ Modality Grounding:</b> &nbsp For the evaluation of the fine-grained modality grounding accuracy, the key idea is to measure the <b>mean Intersection over Union (mIoU)</b>.
+
+            <ul>
+                <li> <b>Image Segmentation</b>.
+
+                    Let us denote by \( \hat{M}_{img} = \{M_g\}^G_{g=1} \) the ground truth set of $G$ regions, and  \( {M}_{img} = \{M_k\}^K_{k=1} \) the set of  \( K \) predictions.
+                    Inspired by prior work, if  \( K \neq G \), we employ padding with  \( \emptyset \) to equalize the sizes of both sets, resulting in a final size of  \( P =\operatorname{max}(G, K) \).
+                    Then, we find a bipartite matching between these two sets by
+                    searching for a permutation of  \( P \) elements,  \( \sigma \in \mathcal{S}_P \), with the lowest cost:
+                    \begin{equation}
+                        \hat{\sigma} = \operatorname{arg min}_{\sigma \in \mathcal{S}_P} \sum_{i}^P \mathcal{L}_{match}(\hat{M}_i, M_{\sigma(i)}),
+                    \end{equation}
+                    where  \( \mathcal{L}_{match}(\hat{M}_i, M_{\sigma(i)}) \) is a pairwise matching cost between ground truth Mi and a prediction with index  \( \sigma(i) \).
+                    We compute this optimal assignment efficiently with the Hungarian algorithm.
+                     We define  \( \mathcal{L}_{match}(\hat{M}_i, M_{\sigma(i)}) \) as
+                     \( \mathcal{L}_{bce}(\hat{M}_i
+                    , M_{\sigma(i)}) + \mathcal{L}_{dice}(\hat{M}_i
+                    , M_{\sigma(i)}) \).
+                    The final IoU of each prediction is:
+                    \begin{equation}
+                        \text{IoU} = \frac{\text{Area of Overlap}}{\text{Area of Union}}
+                    \end{equation}
+                    Based on the IoU scores, we can calculate mIoU metric by referring image segmentation dataset.
+
+                </li>
+
+                <li> <b>Video Tracking</b>.
+                    For videos, we compute the Jaccard Index (a.k.a, mIoU score) for each frame via the above calculations, and then average them.
+                </li>
+
+                <li> <b>Audio Segmentation</b>.
+                    Similarly, the mIoU score for each audio segment is computed to evaluate the quality of speech segmentation results. We measure the 1D span of the extracted segments and the 1D span of gold segments.
+                </li>
+
+
+            </ul>
+
+        </div>
+
+        <br>
+
+
+
+
+<!--        <div class="publication-image" style="text-align:left">-->
+<!--          <b>▶ NER</b>-->
+<!--          <p style="text-align:justify">predicting all possible textual labels of entities \( \{E^{\text{ner}}\} \), with pre-defined entity types \( C^{\text{ner}}\in \mathcal{C}^{\text{ner}} \) (e.g., person, location and organization), where each \( E \) may correspond to a span within \( T \), or visual region within \( I \), or a speech segment within \( A \).-->
+<!--We denote the visual grounding mask as \( M_{img} \) and the speech segment as \( M_{aud} \).<p>-->
+<!--&lt;!&ndash;          <center><img  width="70%" src="./static/images/step1.png"></center>&ndash;&gt;-->
+<!--&lt;!&ndash;          <p style="text-align:justify">After this step, all the possible <b>Target</b> involved in the question will be confirmed.</p>&ndash;&gt;-->
+<!--        </div>-->
+<!--        <br>-->
+
+<!--        <div class="publication-image" style="text-align:left">-->
+<!--          <b>▶ RE</b>-->
+<!--          <p style="text-align:justify">first identifying all possible entities \( \{E^{\text{re}}\} \)  following the NER step, and then determine a pre-defined relation label \( R^{\text{RE}}\in \mathcal{R}^{\text{RE}} \)  for two entities \( < E^{\text{RE}}_i, E^{\text{RE}}_j> \)  that should be paired.-->
+<!--Also \( E^{\text{RE}} \)  should correspond to \( T \) , \( I \) , or \( A \) , as in NER.<p>-->
+<!--&lt;!&ndash;          <p style="text-align:justify">The yielded grounded <b>Target Tracklet</b> of STSG will serve as low-level evidence (i.e., supporting rationale) for the next step of behavior analysis.</p>&ndash;&gt;-->
+<!--        </div>-->
+<!--        <br>-->
+
+
+<!--        <div class="publication-image" style="text-align:left">-->
+<!--          <b>▶ EE</b>-->
+<!--          <p style="text-align:justify">detecting all possible structured event records that consist of event trigger \( E^{\text{et}} \) , event type \( C^{\text{et}}\in \mathcal{C}^{\text{et}} \) , event argument \( E^{\text{ea}} \)  and event argument role \( C^{\text{er}} \in \mathcal{C}^{\text{er}} \) .-->
+<!--Here \( E^{\text{et}} \)  and \( E^{\text{ea}} \)  correspond to a continuous span within \( T \)  or a speech segment within \( A \) .-->
+<!--Also \( E^{\text{ea}} \)  might refer to the visual region within \( I \) ,-->
+<!--or the temporal dynamic tracklet in video \( V \)  (i.e., object tracking).-->
+<!--We denote the video tracking mask as \( M_{vid} \) .-->
+<!--\( \mathcal{C}^{\text{et}} \)  and \( \mathcal{C}^{\text{er}} \)  are pre-defined label sets.<p>-->
+<!--&lt;!&ndash;          <center><img  width="70%" src="./static/images/step3.png"></center>&ndash;&gt;-->
+<!--&lt;!&ndash;          <p style="text-align:justify">This step yields the target action's <b>Observation and Implication</b>.</p>&ndash;&gt;-->
+<!--        </div>-->
+<!--        <br>-->
+
+
+<!--        <div class="publication-image" style="text-align:left">-->
+<!--          <b>▶ Step-4: Question Answering via Ranking</b>-->
+<!--          <p style="text-align:justify">With in-depth understanding of the target actions in the video, we then carefully examine each optional answer with commonsense knowledge, where the final result is output after ranking those candidates.<p>-->
+<!--          <center><img  width="70%" src="./static/images/step4.png"></center>-->
+<!--          <p style="text-align:justify">We then rank the scores of all options and select the most optimal answer <b>Answer</b>.</p>-->
+<!--        </div>-->
+<!--        <br>-->
+
+
+<!--        <div class="publication-image" style="text-align:left">-->
+<!--          <b>▶ Step-5: Answer Verification</b>-->
+<!--          <p style="text-align:justify">Finally, VoT performs verification for the answer from both pixel grounding perception and commonsense cognition perspectives, ensuring the most factually accurate result.<p>-->
+<!--          <center><img  width="70%" src="./static/images/step5.png"></center>-->
+<!--          <p style="text-align:justify">If any inconsistencies are found in perception and cognition perspectives, we record the corresponding rationale, and re-execute the 4-th step to reselect the answer.-->
+<!--This approach ensures that the final outcome is the most factually accurate.</p>-->
+<!--        </div>-->
+<!--        <br>-->
+
+      </div>
+
+    </div>
+    <!--/ Paper intro. -->
+  </div>
+</section>
+
+
+
+
+
+
+<section class="section" id="leaderboard" style="margin-top: 0px">
+  <div class="container is-max-desktop">
+    <!-- Paper Experiment. -->
+    <div class="columns is-centered has-text-centered">
+
+      <div class="column is-four-fifths">
+
+        <h2 class="title is-3">Leaderboard</h2>
+
+        <p style="text-align:left">
+          <b style="font-size: 1.5em">▶ Zero-shot performance of text+image or standalone image input.</b>
+        </p><br>
+        <div class="publication-image">
+          <center><img width="100%" src="./static/images/T+I.png"></center>
+        </div><br>
+
+        <p style="text-align:left">
+          <b style="font-size: 1.5em">▶ Zero-shot performance of text+audio or standalone audio input.</b>
+        </p><br>
+        <div class="publication-image">
+          <center><img width="92%" src="./static/images/T+A.png"></center>
+        </div><br>
+
+
+        <p style="text-align:left">
+          <b style="font-size: 1.5em">▶ Zero-shot performance of text+video or standalone video input.</b>
+        </p><br>
+        <div class="publication-image">
+          <center><img width="53%" src="./static/images/T+V.png"></center>
+        </div><br>
+
+
+        <p style="text-align:left">
+          <b style="font-size: 1.5em">▶ Zero-shot performance in more complex modality-hybrid scenarios.</b>
+        </p><br>
+        <div class="publication-image">
+          <center><img width="95%" src="./static/images/comp.png"></center>
+        </div><br>
+
+
+      </div>
+      </div>
+    <!--/ Paper method. -->
+  </div>
+</section>
+
+
+
+
+
+<!--<section class="section" style="margin-top: 0px">-->
+<!--  <div class="container is-max-desktop">-->
+<!--    &lt;!&ndash; Paper Case. &ndash;&gt;-->
+<!--    <div class="columns is-centered has-text-centered">-->
+
+<!--      <div class="column is-four-fifths">-->
+<!--        <h2 class="title is-3">Demos</h2>-->
+<!--          <p style="text-align:left">-->
+<!--            <b>Some Comparisons</b> between THOR and the vanilla prompting method, and the zero-shot CoT method (Prompt + ‘Lets think step by step’).-->
+<!--          </p><br>-->
+
+<!--        <p class="title is-3" style="font-size: 25px">&#8226; Case-I</p>-->
+
+<!--        <p style="text-align:left">-->
+<!--            <b>&#8226; Vanilla prompt-based result:</b>-->
+<!--          </p>-->
+<!--        <div class="publication-image">-->
+<!--          <center><img width="90%" src="./static/images/case1-prompt.png"></center>-->
+<!--        </div>-->
+
+<!--        <p style="text-align:left">-->
+<!--            <b>&#8226; Result by zero-shot CoT method:</b>-->
+<!--          </p>-->
+<!--        <div class="publication-image">-->
+<!--          <center><img width="90%" src="./static/images/case1-ZeroCoT.png"></center>-->
+<!--        </div>-->
+
+<!--        <p style="text-align:left">-->
+<!--            <b>&#8226; Result by our THOR method:</b>-->
+<!--          </p>-->
+<!--        <div class="publication-image">-->
+<!--          <center><img width="90%" src="./static/images/case1-THOR.png"></center>-->
+<!--        </div>-->
+
+
+<!--        <p class="title is-3" style="font-size: 25px">&#8226; Case-2</p>-->
+
+<!--        <p style="text-align:left">-->
+<!--            <b>&#8226; Vanilla prompt-based result:</b>-->
+<!--          </p>-->
+<!--        <div class="publication-image">-->
+<!--          <center><img width="90%" src="./static/images/case2-prompt.png"></center>-->
+<!--        </div>-->
+
+<!--        <p style="text-align:left">-->
+<!--            <b>&#8226; Result by zero-shot CoT method:</b>-->
+<!--          </p>-->
+<!--        <div class="publication-image">-->
+<!--          <center><img width="90%" src="./static/images/case2-ZeroCoT.png"></center>-->
+<!--        </div>-->
+
+<!--        <p style="text-align:left">-->
+<!--            <b>&#8226; Result by our THOR method:</b>-->
+<!--          </p>-->
+<!--        <div class="publication-image">-->
+<!--          <center><img width="90%" src="./static/images/case2-THOR.png"></center>-->
+<!--        </div>-->
+
+<!--      </div>-->
+<!--      </div>-->
+<!--    &lt;!&ndash;/ Paper method. &ndash;&gt;-->
+<!--  </div>-->
+<!--</section>-->
+
+
+
+
+
+
+<!--<section class="section">-->
+<!--  <div class="container is-max-desktop">-->
+<!--    <div class="columns is-centered has-text-centered">-->
+<!--      <div class="column is-four-fifths">-->
+<!--        <h2 class="title is-3">Paper</h2>-->
+<!--        <div class="publication-image">-->
+<!--          <object data="http://haofei.vip/downloads/papers/VoT_2024.pdf" type="application/pdf" width="100%" height="1020px"></object>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</section>-->
+
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Paper poster. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths" style="width: 100%;">
+        <h2 class="title is-3">Poster</h2>
+        <div class="publication-image">
+          <object data="./static/media/ACL24_MUIE_poster.pdf" type="application/pdf" width="100%" height="1400px"></object>
+        </div>
+      </div>
+    </div>
+    <!--/ Paper poster. -->
+  </div>
+</section>
+
+
+
+
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@inproceedings{ACL24MUIE,
+  title     = {Recognizing Everything from All Modalities at Once: Grounded Multimodal Universal Information Extraction},
+  author    = {Zhang, Meishan and Fei, Hao and Wang, Bin and Wu, Shengqiong and Cao, Yixin and Li, Fei and Zhang, Min},
+  booktitle = {Findings of the Association for Computational Linguistics: ACL 2024},
+  year      = {2024},
+}</code></pre>
+  </div>
+</section>
+
+
+
+<footer class="footer">
+  <div class="container">
+<!--    <div class="content has-text-centered">-->
+<!--      <a class="icon-link"-->
+<!--         href="./static/videos/nerfies_paper.pdf">-->
+<!--        <i class="fas fa-file-pdf"></i>-->
+<!--      </a>-->
+<!--      <a class="icon-link" href="https://github.com/keunhong" class="external-link" disabled>-->
+<!--        <i class="fab fa-github"></i>-->
+<!--      </a>-->
+<!--    </div>-->
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            The website template credit to <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>,
+            licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 License</a>.
+          </p>
+<!--          <p>-->
+<!--            This means you are free to borrow the <a href="https://github.com/nerfies/nerfies.github.io">source code</a> of this website,-->
+<!--            we just ask that you link back to this page in the footer.-->
+<!--            Please remember to remove the analytics code included in the header of the website which-->
+<!--            you do not want on your website.-->
+<!--          </p>-->
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
